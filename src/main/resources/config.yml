@@ -1,0 +1,20 @@
+####################################
+# SpaceStatistics Configuration    #
+#                                  #
+# Written by yakovliam             #
+# Visit https://www.yakovliam.com  #
+####################################
+#
+# Placeholders
+#
+# Statistic key - The key of the statistic (if tracking player kills, it might be the player's username)
+#   |__ # <stat-name> is the name of the statistic (e.g. "player-kills"
+#   |__ # <place #> is the place that you want to find. For example, you want to find the #1 player with the most kills,
+#          so you would put "1" there (no "")
+#   |__ %spacestatistics_<stat-name>_key_<place #>%
+#
+# Statistic value - The value of the statistic (if tracking player kills, it might be the player's kill count)
+#   |__ # <stat-name> is the name of the statistic (e.g. "player-kills"
+#   |__ # <place #> is the place that you want to find. For example, you want to find the #1 player with the most kills,
+#          so you would put "1" there (no "")
+#   |__ %spacestatistics_<stat-name>_value_<place #>%
