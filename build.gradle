@@ -40,7 +40,7 @@ dependencies {
 import org.apache.tools.ant.filters.ReplaceTokens
 
 shadowJar {
-    archiveName("SpaceSeries-${version}.jar")
+    archiveName("SpaceStatistics-${version}.jar")
 
     relocate 'dev.spaceseries.spaceapi', "${project.group}.spacestatistics.lib.spaceapi"
 

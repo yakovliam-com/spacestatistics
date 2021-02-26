@@ -3,6 +3,7 @@ package dev.spaceseries.spacestatistics;
 import dev.spaceseries.spacestatistics.api.Statistic;
 import dev.spaceseries.spacestatistics.model.MapManager;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
@@ -28,5 +29,14 @@ public class StatisticManager extends MapManager<String, Statistic<?, ?>> {
                 .filter(e -> e.getKey().equals(handle))
                 .map(Map.Entry::getValue)
                 .findFirst();
+    }
+
+    /**
+     * Reload all statistics (clear sorted, and re-sort)
+     */
+    public void reload() {
+        this.getMap().forEach((handle, statistic) -> {
+            statistic.update(Collections.emptyList(), false, true);
+        });
     }
 }

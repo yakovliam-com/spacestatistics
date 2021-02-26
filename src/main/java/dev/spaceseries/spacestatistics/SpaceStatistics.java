@@ -1,7 +1,13 @@
 package dev.spaceseries.spacestatistics;
 
+import dev.spaceseries.spacestatistics.command.SpaceStatisticsCommand;
+import dev.spaceseries.spacestatistics.config.Config;
+import dev.spaceseries.spacestatistics.config.LangConfig;
+import dev.spaceseries.spacestatistics.internal.test.statistic.tracker.MoveStatisticTracker;
 import dev.spaceseries.spacestatistics.papi.SpaceStatisticsExpansion;
 import dev.spaceseries.spacestatistics.space.SpacePlugin;
+import dev.spaceseries.spacestatistics.internal.test.statistic.TestReversedStatistic;
+import dev.spaceseries.spacestatistics.internal.test.statistic.TestStatistic;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class SpaceStatistics extends JavaPlugin {
@@ -21,6 +27,16 @@ public final class SpaceStatistics extends JavaPlugin {
      */
     private StatisticManager statisticManager;
 
+    /**
+     * SpaceStatistics Config
+     */
+    private Config spaceStatisticsConfig;
+
+    /**
+     * Lang config
+     */
+    private LangConfig langConfig;
+
     @Override
     public void onLoad() {
         // assign instance
@@ -32,16 +48,49 @@ public final class SpaceStatistics extends JavaPlugin {
         // assign space plugin
         spacePlugin = new SpacePlugin(this);
 
+        // load configs
+        loadConfigs();
+
+        // register commands
+        new SpaceStatisticsCommand();
+
         // initialize statistic manager
-        statisticManager = new StatisticManager();
+        loadStatistics();
 
         // register placeholder manager
         new SpaceStatisticsExpansion().register();
+
+        // register test statistic
+        new TestStatistic().register();
+        new TestReversedStatistic().register();
+        // // initialize test move statistic tracker
+        // new MoveStatisticTracker();
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+    }
+
+    /**
+     * Loads configs
+     */
+    public void loadConfigs() {
+        // load configs
+        spaceStatisticsConfig = new Config();
+        langConfig = new LangConfig();
+    }
+
+    /**
+     * Loads statistics
+     */
+    public void loadStatistics() {
+        // if null, re-initialize
+        if (statisticManager == null)
+            statisticManager = new StatisticManager();
+
+        // run reload method
+        statisticManager.reload();
     }
 
     /**
@@ -69,5 +118,23 @@ public final class SpaceStatistics extends JavaPlugin {
      */
     public StatisticManager getStatisticManager() {
         return statisticManager;
+    }
+
+    /**
+     * Returns space statistics config
+     *
+     * @return config
+     */
+    public Config getSpaceStatisticsConfig() {
+        return spaceStatisticsConfig;
+    }
+
+    /**
+     * Returns lang config
+     *
+     * @return lang config
+     */
+    public LangConfig getLangConfig() {
+        return langConfig;
     }
 }

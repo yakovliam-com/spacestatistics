@@ -1,0 +1,23 @@
+general:
+  help:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l]&r &bStatistics &7&o(v2)&r &3help"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f- &d/spacestatistics reload $&f&l(CLICK ME)$"
+      - "&8&l[&d&lS&5&lS&8&l]&r &f-   &3Reload plugin &7(clear cache of all sources)"
+    extras:
+      1:
+        tooltip:
+          - "&bClick to reload statistics"
+        action: "RUN_COMMAND"
+        content: "/spacestatistics reload"
+reload:
+  success:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l]&r &aSuccessfully reloaded &bStatistics"
+  failure:
+    text:
+      - "&8&l[&d&lS&5&lS&8&l]&r $&cFailed to reload &bStatistics$"
+    extras:
+      1:
+        tooltip:
+          - "&cCheck console for details!"

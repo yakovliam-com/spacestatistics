@@ -26,9 +26,14 @@ public class PlaceholderManager implements Manager {
      */
     public String parse(String statisticName, String returnType, String placeNumber) {
         // is the return type valid?
-        ReturnType type = ReturnType.lookup(returnType);
-        // if type null, return (not valid)
-        if (type == null) return ERROR;
+        ReturnType type;
+
+        try {
+            type = ReturnType.valueOf(returnType.toUpperCase());
+        } catch (Exception ignored) {
+            SpaceStatistics.getInstance().getLogger().warning("Invalid return type for '" + returnType + "'");
+            return ERROR;
+        }
 
         // parse place number into integer
         int place;
@@ -36,7 +41,7 @@ public class PlaceholderManager implements Manager {
             place = Integer.parseInt(placeNumber);
         } catch (Exception ignored) {
             SpaceStatistics.getInstance().getLogger().warning("Invalid place number for '" + placeNumber + "'");
-            return null;
+            return ERROR;
         }
 
         // find the statistic with the provided name
@@ -56,11 +61,11 @@ public class PlaceholderManager implements Manager {
         switch (type) {
             case KEY:
                 // key
-                output = sorted.skip(Integer.parseInt(placeNumber) - 1).map(Entry::getKey).findFirst().orElse(ERROR);
+                output = sorted.skip(place - 1).map(Entry::getKey).findFirst().orElse(ERROR);
                 break;
             case VALUE:
                 // value
-                output = sorted.skip(Integer.parseInt(placeNumber) - 1).map(Entry::getValue).findFirst().orElse(ERROR);
+                output = sorted.skip(place - 1).map(Entry::getValue).findFirst().orElse(ERROR);
                 break;
             default:
                 SpaceStatistics.getInstance().getLogger().warning("Invalid return type for '" + type + "'");

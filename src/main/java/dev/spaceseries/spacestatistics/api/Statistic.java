@@ -3,6 +3,7 @@ package dev.spaceseries.spacestatistics.api;
 import dev.spaceseries.spacestatistics.SpaceStatistics;
 import dev.spaceseries.spacestatistics.model.Entry;
 import dev.spaceseries.spacestatistics.model.Resolver;
+import dev.spaceseries.spacestatistics.model.SortMode;
 
 import java.util.*;
 import java.util.stream.Stream;
@@ -34,6 +35,14 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
     private final Set<K> keys;
 
     /**
+     * The sort mode of the statistic
+     *
+     * <p>Normally NORMAL, but it can be set to reversed as well.
+     * NORMAL is usually descending, and REVERSED is ascending.</p>
+     */
+    private SortMode sortMode;
+
+    /**
      * Construct statistic
      *
      * @param handle handle
@@ -45,6 +54,8 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
         sorted = new ArrayList<>();
         // initialize keys (empty)
         this.keys = new HashSet<>();
+        // initialize sort mode
+        this.sortMode = SortMode.NORMAL;
     }
 
     /**
@@ -62,6 +73,30 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
 
         // since we are provided keys, try and sort them!
         update(keys, true);
+    }
+
+    /**
+     * Construct statistic
+     *
+     * @param handle handle
+     */
+    public Statistic(String handle, Collection<K> keys, SortMode sortMode) {
+        this(handle, keys);
+
+        // set sort mode
+        this.sortMode = sortMode;
+    }
+
+    /**
+     * Construct statistic
+     *
+     * @param handle handle
+     */
+    public Statistic(String handle, SortMode sortMode) {
+        this(handle);
+
+        // set sort mode
+        this.sortMode = sortMode;
     }
 
     /**
@@ -85,7 +120,7 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
             entries.removeIf(entry -> entry.getKey().equals(key));
 
             // now that the key was removed (if it was even present in the first place), add it to the entry list
-            entries.add(new Entry<>(key, this.get(key)));
+            entries.add(new Entry<>(key, this.get(key), this.sortMode));
         });
 
         // now that everything is updated (keys, not the actual sorted cache), we can sort
@@ -97,8 +132,31 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
         // sort entries
         Collections.sort(entries);
 
+        // if reversing, reverse
+        if (this.sortMode == SortMode.REVERSED)
+            Collections.reverse(entries);
+
         // assign the new sorted entries to the current cached sorted entries
         this.sorted = Collections.synchronizedList(entries);
+    }
+
+    /**
+     * Updates the sorted, cached entry list
+     *
+     * <p>This method is essentially a 'sort' method, but it provides other features too. If you set
+     * {@code updateKeySet} to true, we will also add those keys into the cache for sorting later. If set to false,
+     * the method will only update those keys that were just referenced in the {@code keys} param. The {@code async} param
+     * dictates whether or not the task is run asynchronously.</p>
+     *
+     * @param updateKeySet update key set
+     * @param keys         keys
+     * @param async        async
+     */
+    public void update(Collection<K> keys, boolean updateKeySet, boolean async) {
+        if (async)
+            new Thread(() -> update(keys, updateKeySet)).start();
+        else
+            update(keys, updateKeySet);
     }
 
     /**
@@ -158,12 +216,41 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
     }
 
     /**
+     * Returns the sort mode
+     *
+     * @return sort mode
+     */
+    public SortMode getSortMode() {
+        return sortMode;
+    }
+
+    /**
+     * Sets the sort mode
+     *
+     * <p>By setting the sort mode to something else, you are effectively calling
+     * and entirely new update...so it's very hard on the main thread if you are not running
+     * asynchronously. The {@code updateSorting} param, if set to true, will sort the data asynchronously.
+     * So that means the {@code async} param only applies if {@code updateSorting} is set to true.</p>
+     *
+     * @param sortMode      sort mode
+     * @param updateSorting update sorting
+     * @param async         async
+     */
+    public void setSortMode(SortMode sortMode, boolean updateSorting, boolean async) {
+        this.sortMode = sortMode;
+
+        // call update
+        if (updateSorting)
+            update(this.keys, false, async);
+    }
+
+    /**
      * Returns sorted, converted string entry list
      *
      * @return sorted
      */
     public Stream<Entry<String, String>> getSorted() {
         return sorted.stream()
-                .map(e -> new Entry<>(this.keyAsString(e.getKey()), this.valueAsString(e.getValue())));
+                .map(e -> new Entry<>(this.keyAsString(e.getKey()), this.valueAsString(e.getValue()), this.sortMode));
     }
 }

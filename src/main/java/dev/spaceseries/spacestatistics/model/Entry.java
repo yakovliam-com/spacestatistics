@@ -1,10 +1,12 @@
 package dev.spaceseries.spacestatistics.model;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Comparator;
 
 public class Entry<K, V extends Comparable> implements Comparable<Entry<K, V>> {
 
-    private static final Comparator<Entry> ENTRY_COMPARATOR = Comparator.<Entry, Comparable>comparing(o1 -> o1.value).reversed();
+    private static final Comparator<Entry> NORMAL_ENTRY_COMPARATOR = Comparator.<Entry, Comparable>comparing(o1 -> o1.value).reversed();
 
     /**
      * Key
@@ -17,14 +19,21 @@ public class Entry<K, V extends Comparable> implements Comparable<Entry<K, V>> {
     private final V value;
 
     /**
+     * Sort mode
+     */
+    private final SortMode sortMode;
+
+    /**
      * Construct entry
      *
-     * @param key   key
-     * @param value value
+     * @param key      key
+     * @param value    value
+     * @param sortMode sort mode
      */
-    public Entry(K key, V value) {
+    public Entry(K key, V value, SortMode sortMode) {
         this.key = key;
         this.value = value;
+        this.sortMode = sortMode;
     }
 
     /**
@@ -43,6 +52,15 @@ public class Entry<K, V extends Comparable> implements Comparable<Entry<K, V>> {
      */
     public V getValue() {
         return value;
+    }
+
+    /**
+     * Returns sort mode
+     *
+     * @return sort mode
+     */
+    public SortMode getSortMode() {
+        return sortMode;
     }
 
     /**
@@ -77,7 +95,7 @@ public class Entry<K, V extends Comparable> implements Comparable<Entry<K, V>> {
      * @return compared
      */
     @Override
-    public int compareTo(Entry<K, V> o) {
-        return ENTRY_COMPARATOR.compare(this, o);
+    public int compareTo(@NotNull Entry<K, V> o) {
+        return NORMAL_ENTRY_COMPARATOR.compare(this, o);
     }
 }
