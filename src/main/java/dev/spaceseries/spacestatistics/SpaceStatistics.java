@@ -3,7 +3,6 @@ package dev.spaceseries.spacestatistics;
 import dev.spaceseries.spacestatistics.command.SpaceStatisticsCommand;
 import dev.spaceseries.spacestatistics.config.Config;
 import dev.spaceseries.spacestatistics.config.LangConfig;
-import dev.spaceseries.spacestatistics.internal.test.statistic.tracker.MoveStatisticTracker;
 import dev.spaceseries.spacestatistics.papi.SpaceStatisticsExpansion;
 import dev.spaceseries.spacestatistics.space.SpacePlugin;
 import dev.spaceseries.spacestatistics.internal.test.statistic.TestReversedStatistic;
