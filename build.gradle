@@ -3,14 +3,16 @@ plugins {
 }
 
 apply plugin: 'java'
+apply plugin: 'maven-publish'
 
 // naming
 project.ext.majorVersion = '1'
 project.ext.midVersion = '0'
 project.ext.minorVersion = '1'
 project.ext.versionType = 'SNAPSHOT'
+project.ext.version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
 
-version = project.ext.majorVersion + '.' + project.ext.midVersion + '.' + project.ext.minorVersion + "-" + project.ext.versionType
+version = project.ext.version
 group = 'dev.spaceseries'
 
 repositories {
@@ -63,4 +65,48 @@ jar {
 
 artifacts {
     archives shadowJar
+}
+
+// javadoc jar
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    archiveClassifier.set('javadoc')
+    from javadoc.destinationDir
+}
+
+// javadoc
+javadoc {
+    if (JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+// sources jar
+task sourcesJar(type: Jar, dependsOn: classes) {
+    archiveClassifier.set('sources')
+    from sourceSets.main.allSource
+}
+
+// publishing task
+publishing {
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://repo.yakovliam.com/releases"
+            def snapshotsRepoUrl = "https://repo.yakovliam.com/snapshots"
+            url = project.ext.version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+
+            credentials {
+//                username "$CI_REPO_USERNAME"
+//                password "$CI_REPO_PASSWORD"
+                username System.getenv("CI_REPO_USERNAME")
+                password System.getenv("CI_REPO_PASSWORD")
+            }
+        }
+    }
+    publications {
+        shadow(MavenPublication) { publication ->
+            from project.shadow.component(publication)
+            artifact sourcesJar
+            artifact javadocJar
+        }
+    }
 }
