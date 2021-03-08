@@ -46,6 +46,8 @@ shadowJar {
 
     relocate 'dev.spaceseries.spaceapi', "${project.group}.spacestatistics.lib.spaceapi"
 
+    classifier = null
+
     from(sourceSets.main.resources.srcDirs) {
         filter ReplaceTokens, tokens: [version: version]
     }
@@ -66,6 +68,7 @@ jar {
 artifacts {
     archives shadowJar
 }
+
 
 // javadoc jar
 task javadocJar(type: Jar, dependsOn: javadoc) {
