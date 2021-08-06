@@ -1,6 +1,6 @@
 name: SpaceStatistics
 version: @version@
-main: dev.spaceseries.spacestatistics.SpaceStatistics
+main: com.yakovliam.spacestatistics.SpaceStatistics
 api-version: 1.16
 authors: [ yakovliam ]
 description: Statistics management plugin that is implemented as an API
