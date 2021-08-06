@@ -23,12 +23,7 @@ public final class SpaceStatisticsPlugin extends AbstractPlugin {
      * Loads statistics
      */
     public void loadStatistics() {
-        // if null, re-initialize
-        if (statisticManager == null)
-            statisticManager = new StatisticManager();
-
-        // run reload method
-        statisticManager.reload();
+        StatisticManager.getInstance().reload();
     }
 
     /**

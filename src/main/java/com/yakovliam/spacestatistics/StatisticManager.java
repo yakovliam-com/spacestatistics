@@ -10,6 +10,28 @@ import java.util.Optional;
 public class StatisticManager extends MapManager<String, Statistic<?, ?>> {
 
     /**
+     * Instance (singleton)
+     */
+    private static StatisticManager instance;
+
+    /**
+     * Returns the statistic manager
+     * <p>
+     * Singleton
+     *
+     * @return statistics manager
+     */
+    public static StatisticManager getInstance() {
+        if (instance == null) {
+            instance = new StatisticManager();
+        } else {
+            return instance;
+        }
+
+        return instance;
+    }
+
+    /**
      * Exposed register method
      *
      * @param statistic statistic to register

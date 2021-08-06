@@ -1,7 +1,7 @@
 package com.yakovliam.spacestatistics.api.message;
 
 import com.google.common.base.Joiner;
-import com.yakovliam.minehutcore.MineHutCorePlugin;
+import com.yakovliam.spacestatistics.api.AbstractPlugin;
 import com.yakovliam.spacestatistics.api.config.generic.adapter.ConfigurationAdapter;
 import me.mattstudios.msg.adventure.AdventureMessage;
 import me.mattstudios.msg.base.MessageOptions;
@@ -19,7 +19,7 @@ public class Message {
 
     private static AudienceProvider audienceProvider;
 
-    public static void initAudience(MineHutCorePlugin plugin) {
+    public static void initAudience(AbstractPlugin plugin) {
         audienceProvider = BukkitAudiences.create(plugin);
     }
 

@@ -1,6 +1,7 @@
 package com.yakovliam.spacestatistics.api;
 
 import com.yakovliam.spacestatistics.SpaceStatisticsPlugin;
+import com.yakovliam.spacestatistics.StatisticManager;
 import com.yakovliam.spacestatistics.model.Resolver;
 import com.yakovliam.spacestatistics.model.Entry;
 import com.yakovliam.spacestatistics.model.SortMode;
@@ -203,7 +204,7 @@ public abstract class Statistic<K, V extends Comparable<V>> implements Resolver 
      * Register the plugin in the api
      */
     public void register() {
-        SpaceStatisticsPlugin.getInstance().getStatisticManager().register(this);
+        StatisticManager.getInstance().register(this);
     }
 
     /**
