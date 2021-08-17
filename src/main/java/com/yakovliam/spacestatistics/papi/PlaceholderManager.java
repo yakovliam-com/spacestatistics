@@ -1,6 +1,7 @@
 package com.yakovliam.spacestatistics.papi;
 
 import com.yakovliam.spacestatistics.SpaceStatisticsPlugin;
+import com.yakovliam.spacestatistics.StatisticManager;
 import com.yakovliam.spacestatistics.model.Manager;
 import com.yakovliam.spacestatistics.model.ReturnType;
 import com.yakovliam.spacestatistics.api.Statistic;
@@ -59,7 +60,7 @@ public class PlaceholderManager implements Manager {
         }
 
         // find the statistic with the provided name
-        Statistic<?, ?> found = plugin.getStatisticManager().find(statisticName).orElse(null);
+        Statistic<?, ?> found = StatisticManager.getInstance().find(statisticName).orElse(null);
         if (found == null) {
             plugin.getLogger().warning("Invalid statistic name (handle) for '" + statisticName + "'");
             return ERROR;

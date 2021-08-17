@@ -5,11 +5,6 @@ import com.yakovliam.spacestatistics.papi.SpaceStatisticsExpansion;
 
 public final class SpaceStatisticsPlugin extends AbstractPlugin {
 
-    /**
-     * Statistic manager
-     */
-    private StatisticManager statisticManager;
-
     @Override
     public void onEnable() {
         // initialize statistic manager
@@ -24,14 +19,5 @@ public final class SpaceStatisticsPlugin extends AbstractPlugin {
      */
     public void loadStatistics() {
         StatisticManager.getInstance().reload();
-    }
-
-    /**
-     * Returns statistic manager
-     *
-     * @return statistic manager
-     */
-    public StatisticManager getStatisticManager() {
-        return statisticManager;
     }
 }
